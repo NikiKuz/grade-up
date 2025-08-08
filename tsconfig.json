@@ -1,0 +1,32 @@
+{
+  "compilerOptions": {
+    "plugins": [{ "transform": "typescript-transform-paths" }],
+    "target": "ES2018",
+    "lib": ["ES6"],
+    "module": "NodeNext",
+    "baseUrl": ".",
+    "rootDir": ".",
+    "resolveJsonModule": true,
+    "allowJs": true,
+    "sourceMap": true,
+    "outDir": "./dist",
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "strict": true,
+    "noImplicitAny": true,
+    "skipLibCheck": true,
+    "paths": {
+      "@models/*": ["src/models/*"],
+      "@controllers/*": ["src/controllers/*"],
+      "@routes/*": ["src/routes/*"],
+      "@services/*": ["src/services/*"],
+      "@utils/*": ["src/utils/*"],
+      "#types/*": ["src/types/*"]
+    }
+  },
+  "include": ["./index.ts", "src/**/*", "src/services/.service.ts", "types.d.ts" ],
+  "exclude": ["node_modules", "openapi.json"],
+  "ts-node": {
+    "esm": true
+  }
+}
