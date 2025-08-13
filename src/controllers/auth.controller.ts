@@ -1,9 +1,9 @@
 import { TypeUser } from '#types/user.js'
 import { createUser, findUserByEmail } from '@models/user.models.js'
 import { logger } from '@services/logger.service.js'
-import { comparePasswords, hashPassword } from '@utils/hashPassword.js'
+import { comparePasswords, hashPassword } from '@utils/hash.password.js'
 import { generateAuthTokens, setAuthCookies } from '@utils/jwt.js'
-import { sanitizeUser } from '@utils/sanitizeUser.js'
+import { sanitizeUser } from '@utils/sanitize.user.js'
 import { Request, Response } from 'express'
 import { z } from 'zod'
 

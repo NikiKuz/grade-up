@@ -1,11 +1,12 @@
 import { logger } from "@services/logger.service.js";
 import jwt from 'jsonwebtoken'
-import { tokenConfig } from "src/configs/json.token.config.js";
 import { Response } from "express";
+
+export const { ACCESS_SECRET, REFRESH_SECRET } = process.env
 
 export async function generateAccessToken(payload: { emaail: string }){
     try {
-        return jwt.sign(payload, tokenConfig.access.secret, { expiresIn: "15m" })
+        return jwt.sign(payload, process.env.ACCESS_SECRET as string, { expiresIn: "15m" })
     } catch (error) {
         logger.error("error creating accessToken", error)
         throw new Error("error creating accessToken")
@@ -14,8 +15,8 @@ export async function generateAccessToken(payload: { emaail: string }){
 
 export async function generateAuthTokens(payload: { email: string, id: string;}) {
     try {
-        const accessToken = jwt.sign(payload, tokenConfig.access.secret, { expiresIn: "15m" });
-        const refreshToken = jwt.sign(payload, tokenConfig.refresh.secret, { expiresIn: "7d" });
+        const accessToken = jwt.sign(payload, ACCESS_SECRET as string, { expiresIn: "15m" });
+        const refreshToken = jwt.sign(payload, REFRESH_SECRET as string, { expiresIn: "7d" });
         return { accessToken, refreshToken };
       } catch (error) {
         logger.error('JWT sign error:', error);
@@ -25,7 +26,7 @@ export async function generateAuthTokens(payload: { email: string, id: string;})
 }
 
 export function setAuthCookies(res: Response, tokens: { accessToken: string, refreshToken?: string }) {
-  res.cookie("access_token", tokens.accessToken, {
+  res.cookie("ACCESS_SECRET", tokens.accessToken, {
     httpOnly: true,
     secure: true, 
     sameSite: "none",
@@ -33,7 +34,7 @@ export function setAuthCookies(res: Response, tokens: { accessToken: string, ref
   });
 
   if (tokens.refreshToken) {
-    res.cookie("refresh_token", tokens.refreshToken, {
+    res.cookie("REFRESH_SECRET", tokens.refreshToken, {
       httpOnly: true,
       secure: true,
       sameSite: "none",
