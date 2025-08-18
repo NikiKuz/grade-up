@@ -1,6 +1,7 @@
 import { logger } from "@services/logger.service.js";
 import jwt from 'jsonwebtoken'
 import { Response } from "express";
+import { storeRefreshToken } from "@models/redis.models.js";
 
 export const { ACCESS_SECRET, REFRESH_SECRET } = process.env
 
@@ -25,7 +26,7 @@ export async function generateAuthTokens(payload: { email: string, id: string;})
       
 }
 
-export function setAuthCookies(res: Response, tokens: { accessToken: string, refreshToken?: string }) {
+export async function setAndStoreAuthCookies(res: Response, userId: string, tokens: { accessToken: string, refreshToken?: string }) {
   res.cookie("ACCESS_SECRET", tokens.accessToken, {
     httpOnly: true,
     secure: true, 
@@ -34,6 +35,7 @@ export function setAuthCookies(res: Response, tokens: { accessToken: string, ref
   });
 
   if (tokens.refreshToken) {
+    await storeRefreshToken(userId, tokens.refreshToken)
     res.cookie("REFRESH_SECRET", tokens.refreshToken, {
       httpOnly: true,
       secure: true,
@@ -41,4 +43,8 @@ export function setAuthCookies(res: Response, tokens: { accessToken: string, ref
       maxAge: Number(new Date(Date.now() + 7 * 24 * 60 * 60 * 1000)),
     });
   }
+}
+
+export async function deleteCookies(): Promise<any>{
+  return
 }

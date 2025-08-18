@@ -2,7 +2,7 @@ import { TypeUser } from '#types/user.js'
 import { createUser, findUserByEmail } from '@models/user.models.js'
 import { logger } from '@services/logger.service.js'
 import { comparePasswords, hashPassword } from '@utils/hash.password.js'
-import { generateAuthTokens, setAuthCookies } from '@utils/jwt.js'
+import { generateAuthTokens, setAndStoreAuthCookies } from '@utils/jwt.js'
 import { sanitizeUser } from '@utils/sanitize.user.js'
 import { Request, Response } from 'express'
 import { z } from 'zod'
@@ -51,7 +51,7 @@ export async function register(req: CreateUserRequest, res: Response): Promise<R
           id: createdUser.id.toString(),
     });
     
-    setAuthCookies(res, { accessToken, refreshToken });
+    setAndStoreAuthCookies(res, createdUser?.id, { accessToken, refreshToken });
 
     const userWithoutPassword = sanitizeUser(createdUser);
 
@@ -93,7 +93,7 @@ export async function login(req: CreateUserRequest, res: Response): Promise<Resp
           id: user.id.toString(),
     });
     
-    setAuthCookies(res, { accessToken, refreshToken });
+    setAndStoreAuthCookies(res, user?.id, { accessToken, refreshToken });
 
     const userWithoutPassword = sanitizeUser(user);
 

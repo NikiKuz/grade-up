@@ -1,5 +1,5 @@
 export type TypeUser = {
-    id?: bigint, 
+    id?: string, 
     email: string,
     password: string
 }
